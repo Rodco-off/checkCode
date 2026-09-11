@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -9,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Config struct {
+type mainConfig struct {
 	ServerPort string
 	DBHost     string
 	DBPort     string
@@ -18,12 +17,12 @@ type Config struct {
 	DBName     string
 }
 
-func loadConfig() *Config {
+func loadConfig() *mainConfig {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Что-то не так с env файлом. %v", err)
 	}
 
-	return &Config{
+	return &mainConfig{
 		ServerPort: os.Getenv("ServerPort"),
 		DBHost:     os.Getenv("DBHost"),
 		DBPort:     os.Getenv("DBPort"),
@@ -33,8 +32,8 @@ func loadConfig() *Config {
 	}
 }
 
-func (config *Config) getConnStr() string {
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
+func (config *mainConfig) getConnStr() string {
+	connStr := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
 		config.DBUser,
 		config.DBPassword,
 		config.DBHost,
@@ -45,19 +44,11 @@ func (config *Config) getConnStr() string {
 	return connStr
 }
 
-func (config *Config) connectDB() *sql.DB {
-	connStr := config.getConnStr()
-	con, err := sql.Open("pgx", connStr)
-	if err != nil {
-		log.Fatalf("Ошибка с созданием подключения к БД. %v", err)
-	}
-	if con.Ping() != nil {
-		log.Fatalf("Ошибка с связью с БД. %v", err)
-	}
-
-	return con
+func (config *mainConfig) connectDB() {
+	//connStr := config.getConnStr()
+	//con, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 }
 
 func main() {
-	//...
+	//config := loadConfig()
 }

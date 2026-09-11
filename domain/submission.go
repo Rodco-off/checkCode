@@ -3,16 +3,16 @@ package domain
 import "time"
 
 type Submission struct {
-	ID           int
-	TaskID       int
-	SessionID    int
-	Code         string
-	Status       string
-	Output       string
-	Expected     string
-	ErrorMessage string
+	ID           int    `gorm:"primaryKey"`
+	TaskID       int    `gorm:"not null;index"`
+	SessionID    int    `gorm:"not null;index"`
+	Code         string `gorm:"type:text;not null"`
+	Status       string `gorm:"default:pending"`
+	Output       string `gorm:"type:text"`
+	Expected     string `gorm:"type:text"`
+	ErrorMessage string `gorm:"type:text"`
 	// Hint string // запас под нейронку
-	CreatedAt time.Time
+	CreatedAt time.Time `gorm:"autoCreateTime"`
 }
 
 // Для Поля Status в структуре

@@ -1,9 +1,9 @@
 package domain
 
 type Task struct {
-	TaskID      int
-	Title       string
-	Description string
-	Difficulty  string
-	TestCase    []byte
+	TaskID      int    `gorm:"primaryKey"`
+	Title       string `gorm:"not null"`
+	Description string `gorm:"not null"`
+	Difficulty  string `gorm:"default:easy"`
+	TestCase    []byte `gorm:"type:jsonb;not null"`
 }
