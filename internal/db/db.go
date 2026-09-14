@@ -20,5 +20,4 @@ func Connect(cfg config.Config) (*gorm.DB, error) {
 
 func Migrate(conn *gorm.DB) error {
 	return conn.AutoMigrate(domain.Task{}, domain.Submission{})
-
 }

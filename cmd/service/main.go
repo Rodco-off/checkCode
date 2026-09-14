@@ -9,6 +9,7 @@ import (
 
 func main() {
 	var err error
+
 	cfg := config.Load()
 	conn, err := db.Connect(cfg)
 	if err != nil {
@@ -21,5 +22,4 @@ func main() {
 		log.Fatalln("Ошибка миграции БД")
 		panic("Ошибка миграции БД ")
 	}
-
 }
