@@ -5,5 +5,5 @@ type Task struct {
 	Title       string `gorm:"not null"`
 	Description string `gorm:"not null"`
 	Difficulty  string `gorm:"default:easy"`
-	TestCase    []byte `gorm:"type:jsonb;not null"`
+	TestCases   []byte `gorm:"type:jsonb;not null"`
 }
