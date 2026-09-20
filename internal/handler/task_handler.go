@@ -34,7 +34,7 @@ func (handl *TaskHandler) GetByID(cont echo.Context) error {
 
 	task, err := handl.repo.GetByID(uint(id))
 	if errors.Is(err, repository.ErrTaskNotFound) {
-		cont.JSON(http.StatusNotFound, map[string]string{"error": "Не найдена задача с таким айди"})
+		cont.JSON(http.StatusNotFound, map[string]string{"error": "Не найдена задача с таким ID"})
 	}
 
 	if err != nil {
