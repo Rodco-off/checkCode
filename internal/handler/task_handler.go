@@ -42,5 +42,4 @@ func (handl *TaskHandler) GetByID(cont echo.Context) error {
 	}
 
 	return cont.JSON(http.StatusOK, task)
-
 }
