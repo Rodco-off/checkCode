@@ -10,8 +10,12 @@ import (
 func NewRouter(taskHandler TaskHandler) *echo.Echo {
 	e := echo.New()
 
+	e.Renderer = NewTemplateRenderer("templates/*.html")
+	e.Static("/static", "static")
+
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
+	e.Use(SessionMiddleware)
 
 	api := e.Group("/api")
 	{
@@ -22,6 +26,9 @@ func NewRouter(taskHandler TaskHandler) *echo.Echo {
 	e.GET("/health", func(cont echo.Context) error {
 		return cont.JSON(http.StatusOK, map[string]string{"status": "ok"})
 	})
+
+	e.GET("/", taskHandler.TasksPage)
+	e.GET("/tasks/:id", taskHandler.TaskPage)
 
 	return e
 }
