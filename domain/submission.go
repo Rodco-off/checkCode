@@ -3,9 +3,9 @@ package domain
 import "time"
 
 type Submission struct {
-	ID           int    `gorm:"primaryKey"`
-	TaskID       int    `gorm:"not null;index"`
-	SessionID    int    `gorm:"not null;index"`
+	ID           uint   `gorm:"primaryKey"`
+	TaskID       uint   `gorm:"not null;index"`
+	SessionID    uint   `gorm:"not null;index"`
 	Code         string `gorm:"type:text;not null"`
 	Status       string `gorm:"default:pending"`
 	Output       string `gorm:"type:text"`

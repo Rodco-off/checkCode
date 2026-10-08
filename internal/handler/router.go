@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-func NewRouter(taskHandler TaskHandler) *echo.Echo {
+func NewRouter(taskHandler TaskHandler, submitHandler SubmitHandler) *echo.Echo {
 	e := echo.New()
 
 	e.Renderer = NewTemplateRenderer("templates/*.html")
@@ -21,6 +21,7 @@ func NewRouter(taskHandler TaskHandler) *echo.Echo {
 	{
 		api.GET("/tasks", taskHandler.GetAll)
 		api.GET("/tasks/:id", taskHandler.GetByID)
+		api.POST("/submit", submitHandler.Submit)
 	}
 
 	e.GET("/health", func(cont echo.Context) error {

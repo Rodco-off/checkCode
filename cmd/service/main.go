@@ -29,8 +29,12 @@ func main() {
 	}
 
 	taskRepo := repository.NewTaskRepository(conn)
+	submitRepo := repository.NewSubmissionRepository(conn)
+
 	taskHandler := handler.NewTaskHandler(taskRepo)
-	router := handler.NewRouter(*taskHandler)
+	submitHandler := handler.NewSubmissionHandler(submitRepo)
+
+	router := handler.NewRouter(*taskHandler, *submitHandler)
 
 	go func() {
 		log.Printf("Сервер на %s", cfg.ServerPort)
