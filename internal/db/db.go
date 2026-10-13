@@ -3,8 +3,8 @@ package db
 import (
 	"fmt"
 
-	"github.com/Rodco-off/checkCode/domain"
 	"github.com/Rodco-off/checkCode/internal/config"
+	"github.com/Rodco-off/checkCode/internal/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

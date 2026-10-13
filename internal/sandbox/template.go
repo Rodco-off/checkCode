@@ -6,7 +6,7 @@ import (
 )
 
 const mainTemplate = `
-packeg main
+package main
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ func main() {
 `
 
 type TemplateData struct {
-	userCode string
+	UserCode string
 }
 
 func GenerativeMainFile(userCode string) (string, error) {
@@ -33,7 +33,7 @@ func GenerativeMainFile(userCode string) (string, error) {
 	}
 
 	var buf bytes.Buffer
-	if err := templ.Execute(&buf, TemplateData{userCode: userCode}); err != nil {
+	if err := templ.Execute(&buf, TemplateData{UserCode: userCode}); err != nil {
 		return "", err
 	}
 

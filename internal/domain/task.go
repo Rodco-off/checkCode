@@ -10,7 +10,7 @@ type Task struct {
 	TestCases   []byte `gorm:"type:jsonb;not null"`
 }
 
-func (task *Task) ParseTestCase() ([]TestCase, error) {
+func (task *Task) ParseTestCases() ([]TestCase, error) {
 	var cases []TestCase
 	if err := json.Unmarshal(task.TestCases, &cases); err != nil {
 		return nil, err

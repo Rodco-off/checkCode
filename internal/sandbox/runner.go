@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/moby/moby/api/pkg/stdcopy"
 	"github.com/moby/moby/api/types/container"
 	"github.com/moby/moby/client"
 )
@@ -73,13 +74,17 @@ func (run *Runner) Run(cont context.Context, userCode, input string) (string, er
 	}
 	defer attach.Close()
 
-	output, err := io.ReadAll(attach.Reader)
-	if err != nil && err != io.EOF {
+	var stdout, stderr bytes.Buffer
+	if _, err := stdcopy.StdCopy(&stdout, &stderr, attach.Reader); err != nil {
 		return "", fmt.Errorf("read: %w", err)
 	}
 
-	return string(output), nil
+	return stdout.String() + stderr.String(), nil
 
+}
+
+func (r *Runner) ContainerID() string {
+	return r.containerID
 }
 
 func makeTar(filename, content string) (io.Reader, error) {

@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Rodco-off/checkCode/domain"
-	"github.com/Rodco-off/checkCode/repository"
+	"github.com/Rodco-off/checkCode/internal/domain"
+	"github.com/Rodco-off/checkCode/internal/repository"
 	"github.com/labstack/echo"
 )
 

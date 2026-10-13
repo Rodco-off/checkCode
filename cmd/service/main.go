@@ -9,7 +9,7 @@ import (
 	"github.com/Rodco-off/checkCode/internal/config"
 	"github.com/Rodco-off/checkCode/internal/db"
 	"github.com/Rodco-off/checkCode/internal/handler"
-	"github.com/Rodco-off/checkCode/repository"
+	"github.com/Rodco-off/checkCode/internal/repository"
 )
 
 func main() {

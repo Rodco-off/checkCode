@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/Rodco-off/checkCode/domain"
+	"github.com/Rodco-off/checkCode/internal/domain"
 	"gorm.io/gorm"
 )
 
@@ -24,4 +24,8 @@ func (repo *SubmissionRepository) GetBySession(sessionID string) ([]domain.Submi
 		Order("create_at DESC").Find(&subs).Error
 
 	return subs, err
+}
+
+func (r *SubmissionRepository) Update(s *domain.Submission) error {
+	return r.db.Save(s).Error
 }
