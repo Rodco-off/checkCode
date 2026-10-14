@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/moby/moby/api/pkg/stdcopy"
 	"github.com/moby/moby/api/types/container"
@@ -20,7 +21,7 @@ type Runner struct {
 func NewRunner(cont context.Context) (*Runner, error) {
 	cli, err := client.New(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
-		return nil, fmt.Errorf("docker client %w", err)
+		return nil, fmt.Errorf("Докер клиент с %w", err)
 	}
 
 	resp, err := cli.ContainerCreate(cont, client.ContainerCreateOptions{
@@ -30,18 +31,28 @@ func NewRunner(cont context.Context) (*Runner, error) {
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("контейнер создан с %w", err)
+		return nil, fmt.Errorf("Контейнер создан с %w", err)
 	}
 
 	if _, err := cli.ContainerStart(cont, resp.ID, client.ContainerStartOptions{}); err != nil {
-		return nil, fmt.Errorf("контейнер запустился с %w", err)
+		return nil, fmt.Errorf("Контейнер запустился с %w", err)
 	}
 
 	return &Runner{cli: cli, containerID: resp.ID}, nil
 }
 
+type runResult struct {
+	stdout string
+	stderr string
+	err    error
+}
+
 func (run *Runner) Run(cont context.Context, userCode, input string) (string, error) {
+	cont, cancel := context.WithTimeout(cont, 5*time.Second)
+	defer cancel()
+
 	content, err := GenerativeMainFile(userCode)
+
 	if err != nil {
 		return "", fmt.Errorf("generative: %w", err)
 	}
@@ -74,13 +85,24 @@ func (run *Runner) Run(cont context.Context, userCode, input string) (string, er
 	}
 	defer attach.Close()
 
-	var stdout, stderr bytes.Buffer
-	if _, err := stdcopy.StdCopy(&stdout, &stderr, attach.Reader); err != nil {
-		return "", fmt.Errorf("read: %w", err)
+	ch := make(chan runResult, 1)
+	go func() {
+		var stdout, stderr bytes.Buffer
+		_, err := stdcopy.StdCopy(&stdout, &stderr, attach.Reader)
+		ch <- runResult{stdout.String(), stderr.String(), err}
+	}()
+
+	select {
+	case r := <-ch:
+		if r.err != nil {
+			return "", fmt.Errorf("read: %w", r.err)
+		}
+		return r.stdout + r.stderr, nil
+
+	case <-cont.Done():
+		attach.Close()
+		return "", fmt.Errorf("timeout: решение не завершилось за 5 секунд")
 	}
-
-	return stdout.String() + stderr.String(), nil
-
 }
 
 func (r *Runner) ContainerID() string {

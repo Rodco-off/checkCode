@@ -9,8 +9,8 @@ const mainTemplate = `
 package main
 
 import (
-	"fmt"
-	"os"
+    "fmt"
+    "os"
 	"strings"
 )
 

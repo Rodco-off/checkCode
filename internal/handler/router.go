@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-func NewRouter(taskHandler TaskHandler, submitHandler SubmitHandler) *echo.Echo {
+func NewRouter(taskHandler *TaskHandler, submitHandler *SubmitHandler) *echo.Echo {
 	e := echo.New()
 
 	e.Renderer = NewTemplateRenderer("templates/*.html")

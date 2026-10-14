@@ -5,15 +5,17 @@ import (
 
 	"github.com/Rodco-off/checkCode/internal/domain"
 	"github.com/Rodco-off/checkCode/internal/repository"
+	"github.com/Rodco-off/checkCode/internal/service"
 	"github.com/labstack/echo"
 )
 
 type SubmitHandler struct {
 	subRepo *repository.SubmissionRepository
+	checker *service.Checker
 }
 
-func NewSubmissionHandler(subRepo *repository.SubmissionRepository) *SubmitHandler {
-	return &SubmitHandler{subRepo: subRepo}
+func NewSubmissionHandler(subRepo *repository.SubmissionRepository, checker *service.Checker) *SubmitHandler {
+	return &SubmitHandler{subRepo: subRepo, checker: checker}
 }
 
 func (handl *SubmitHandler) Submit(cont echo.Context) error {
@@ -35,8 +37,15 @@ func (handl *SubmitHandler) Submit(cont echo.Context) error {
 		return cont.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
-	return cont.JSON(http.StatusOK, map[string]interface{}{
-		"id":     sub.ID,
-		"status": sub.Status,
+	if err := handl.checker.Check(cont.Request().Context(), sub); err != nil {
+		return cont.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	return cont.JSON(http.StatusOK, map[string]any{
+		"id":            sub.ID,
+		"status":        sub.Status,
+		"output":        sub.Output,
+		"expected":      sub.Expected,
+		"error_message": sub.ErrorMessage,
 	})
 }
