@@ -3,7 +3,7 @@ package repository
 import (
 	"errors"
 
-	"github.com/Rodco-off/checkCode/domain"
+	"github.com/Rodco-off/checkCode/internal/domain"
 	"gorm.io/gorm"
 )
 

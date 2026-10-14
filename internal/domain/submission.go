@@ -15,10 +15,9 @@ type Submission struct {
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 }
 
-// Для Поля Status в структуре
 const (
-	StatusError   = "Error"
-	StatusPending = "Pending"
-	StatusFailed  = "Failed"
-	StatusSuccess = "Success"
+	StatusError   = "error"
+	StatusPending = "pending"
+	StatusFailed  = "failed"
+	StatusSuccess = "success"
 )

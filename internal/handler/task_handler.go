@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Rodco-off/checkCode/repository"
+	"github.com/Rodco-off/checkCode/internal/repository"
 	"github.com/labstack/echo"
 )
 

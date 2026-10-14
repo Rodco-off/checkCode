@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"os/signal"
@@ -9,7 +10,9 @@ import (
 	"github.com/Rodco-off/checkCode/internal/config"
 	"github.com/Rodco-off/checkCode/internal/db"
 	"github.com/Rodco-off/checkCode/internal/handler"
-	"github.com/Rodco-off/checkCode/repository"
+	"github.com/Rodco-off/checkCode/internal/repository"
+	"github.com/Rodco-off/checkCode/internal/sandbox"
+	"github.com/Rodco-off/checkCode/internal/service"
 )
 
 func main() {
@@ -31,10 +34,17 @@ func main() {
 	taskRepo := repository.NewTaskRepository(conn)
 	submitRepo := repository.NewSubmissionRepository(conn)
 
-	taskHandler := handler.NewTaskHandler(taskRepo)
-	submitHandler := handler.NewSubmissionHandler(submitRepo)
+	runner, err := sandbox.NewRunner(context.Background())
+	if err != nil {
+		log.Fatalf("Sandbox: %v", err)
+	}
 
-	router := handler.NewRouter(*taskHandler, *submitHandler)
+	checker := service.NewChecker(taskRepo, submitRepo, runner)
+
+	taskHandler := handler.NewTaskHandler(taskRepo)
+	submitHandler := handler.NewSubmissionHandler(submitRepo, checker)
+
+	router := handler.NewRouter(taskHandler, submitHandler)
 
 	go func() {
 		log.Printf("Сервер на %s", cfg.ServerPort)

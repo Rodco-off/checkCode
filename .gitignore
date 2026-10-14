@@ -20,9 +20,15 @@ profile.cov
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+#git
+.gitignore
+.git
+
 # Go workspace file
 go.work
 go.work.sum
+go.mod
+go.sum
 
 # env file
 .env
