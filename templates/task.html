@@ -3,6 +3,16 @@
 
 <head>
     <title>{{.Task.Title}}</title>
+    <!--основа codemirror-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/go/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/anyword-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <!--для автозаполнения-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -23,10 +33,46 @@
     <div id="result"></div>
 
     <script>
+        var goKeywords = [
+                "break", "case", "chan", "const", "continue", "default", "defer",
+                "else", "fallthrough", "for", "func", "go", "goto", "if", "import",
+                "interface", "map", "package", "range", "return", "select", "struct",
+                "switch", "type", "var",
+                "bool", "byte", "complex64", "complex128", "error", "float32", "float64",
+                "int", "int8", "int16", "int32", "int64", "rune", "string",
+                "uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
+                "true", "false", "iota", "nil", "append", "cap", "close", "complex",
+                "copy", "delete", "imag", "len", "make", "new", "panic", "print",
+                "println", "real", "recover"
+            ];
+        function goHint(cm) {
+                var cur = cm.getCursor();
+                var token = cm.getTokenAt(cur);
+                var word = token.string;
+
+                return CodeMirror.hint.fromList(cm, { words: goKeywords });
+            }
+        CodeMirror.registerHelper("hint", "go", goHint);
+        var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+                mode: "go",
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                theme: "dracula",
+                extraKeys: { "Ctrl-Space": "autocomplete" },
+            });
+        editor.on("change", function (cm, change) {
+                if (change.text[0] === ".") {
+                    cm.showHint({ hint: CodeMirror.hint.go });
+                }
+            });
+        CodeMirror.commands.autocomplete = function (cm) {
+                cm.showHint({ hint: CodeMirror.hint.go });
+            };
         document.getElementById('submit-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const taskId = parseInt(document.getElementById('task-id').value);
-            const code = document.getElementById('code').value;
+            const code = editor.getValue();
 
             const resp = await fetch('/api/submit', {
                 method: 'POST',

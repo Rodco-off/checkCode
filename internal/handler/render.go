@@ -17,6 +17,6 @@ func NewTemplateRenderer(pattern string) *TemplateRenderer {
 	}
 }
 
-func (templ *TemplateRenderer) Render(write io.Writer, name string, data interface{}, cont echo.Context) error {
+func (templ *TemplateRenderer) Render(write io.Writer, name string, data any, cont echo.Context) error {
 	return templ.templates.ExecuteTemplate(write, name, data)
 }
