@@ -2,11 +2,29 @@ h1 {
     margin-bottom: 16px;
 }
 
+body {
+    background-color: #3b3e52;
+    color: #f8f8f2;
+}
+
 .task-layout {
     display: flex;
     gap: 250px;
     padding: 30px 40px;
     align-items: flex-start;
+}
+
+footer {
+    margin-top: 150px;
+    padding: 20px 20px;
+    border-top: 1px solid #000;
+    text-align: center;
+    color: #FFF;
+    font-size: 14px;
+}
+
+footer strong {
+    color: #f8f8f2;
 }
 
 .task-info {
@@ -29,12 +47,79 @@ h1 {
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 14px;
-    background: #FFF;
-    color: #000;
+    font-weight: bold;
+}
+
+.difficulty-text {
+    font-weight: bold;
+}
+
+.difficulty-text.easy {
+    color: #52b788;
+}
+
+.difficulty-text.medium {
+    color: #f9c74f;
+}
+
+.difficulty-text.hard {
+    color: #f94144;
 }
 
 .task-editor {
     flex: 2;
+}
+
+.editor-form {
+    display: flex;
+    gap: 0px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.editor-container {
+    flex: 1;
+}
+
+.button-container {
+    flex-shrink: 0;
+    width: auto;
+}
+
+button {
+    color: #FFF;
+    background: #444;
+}
+
+.result-box {
+    display: none;
+    margin-top: 20px;
+    max-width: 1012px;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.result-box.success {
+    display: block;
+    background-color: #1b4332;
+    border: 1px solid #52b788;
+    color: #52b788;
+}
+
+.result-box.failed {
+    display: block;
+    background-color: #4a1a1a;
+    border: 1px solid #f94144;
+    color: #f94144;
+}
+
+.result-box.error {
+    display: block;
+    background-color: #4a3b1a;
+    border: 1px solid #f9c74f;
+    color: #f9c74f;
 }
 
 .CodeMirror {

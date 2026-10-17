@@ -24,16 +24,21 @@
         <div class="task-info">
             <h1>{{.Task.Title}}</h1>
             <p>{{.Task.Description}}</p>
-            <p class="difficulty">Сложность: {{.Task.Difficulty}}</p>
+            <p>Сложность: <span class="difficulty-text {{.Task.Difficulty}}">{{.Task.Difficulty}}</span></p>
         </div>
         <div class="task-editor">
-            <form id="submit-form">
+            <form id="submit-form" class="editor-form">
                 <input type="hidden" id="task-id" value="{{.Task.TaskID}}">
-                <textarea id="code"></textarea>
-                <br>
-                <button type="submit">Отправить</button>
-                <div id="result"></div>
+
+                <div class="editor-container">
+                    <textarea id="code"></textarea>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit">Отправить</button>
+                </div>
             </form>
+            <div id="result" class="result-box"></div>
         </div>
     </div>
 
@@ -68,7 +73,7 @@
                 autoCloseBrackets: true,
                 matchBrackets: true,
             });
-        editor.setSize("75%", "650px")
+        editor.setSize("95%", "650px")
         editor.on("change", function (cm, change) {
                 if (change.text[0] === ".") {
                     cm.showHint({ hint: CodeMirror.hint.go });
@@ -88,9 +93,35 @@
                 body: JSON.stringify({ task_id: taskId, code: code })
             });
             const data = await resp.json();
-            document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            const resultDiv = document.getElementById('result');
+
+            resultDiv.className = 'result-box';
+            resultDiv.innerHTML = '';
+
+            if (data.status === 'success') {
+                resultDiv.classList.add('success');
+                resultDiv.innerHTML = '<h3>✅ Верно!</h3>';
+
+            } else if (data.status === 'failed') {
+                resultDiv.classList.add('failed');
+                resultDiv.innerHTML = `
+                <h3>❌ Неверно</h3>
+                <p>Ожидалось: <b>${data.expected || 'пусто'}</b></p>
+                <p>Получено: <b>${data.output || 'пусто'}</b></p>
+            `;
+
+            } else if (data.status === 'error') {
+                resultDiv.classList.add('error');
+                resultDiv.innerHTML = `
+                <h3>⚠️ Ошибка компиляции/выполнения</h3>
+                <pre style="white-space: pre-wrap; margin: 0;">${data.error_message}</pre>
+            `;
+            }
         });
     </script>
+    <footer>
+        <p>Сайт сделан <strong>Rodco</strong> © 2026. Все права защищены.</p>
+    </footer>
 </body>
 
 </html>
