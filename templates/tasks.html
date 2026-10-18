@@ -8,11 +8,12 @@
 </head>
 <body>
     <h1>Задачи</h1>
-    <ul>
+    <ul class="list-task">
     {{range .Tasks}}
         <li>
-            <a href="/tasks/{{.TaskID}}">{{.Title}}</a>
-            - {{.Difficulty}}
+            <a href="/tasks/{{.TaskID}}" class="name-task">{{.Title}}</a>
+            <span>-</span>
+            <span class="difficulty-text {{.Difficulty}}">{{.Difficulty}}</span>
         </li>
     {{end}}
     </ul>
