@@ -110,7 +110,7 @@ button {
 .result-box {
     display: none;
     margin-top: 20px;
-    max-width: 955px;
+    max-width: 925px;
     padding: 15px;
     border-radius: 6px;
     font-family: monospace;
@@ -213,4 +213,67 @@ button {
     border: 1px solid #444 !important;
     border-radius: 4px !important;
     font-size: 14px !important;
+}
+
+.task-info h3 {
+    color: #bd93f9;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.task-constraints pre {
+    display: inline-block;
+    max-width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 6px;
+    color: #ffb86c;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.example-box {
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid #6272a4;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 0 6px 6px 0;
+}
+
+.example-box p {
+    margin: 5px 0;
+    color: #f8f8f2;
+}
+
+.example-box code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #50fa7b;
+}
+
+.back-btn {
+    display: inline-block;
+    margin: 20px 0 0 40px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 2px solid #00e5ff;
+    color: #00e5ff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 5px #00e5ff, inset 0 0 5px #00e5ff;
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #00e5ff;
+    color: #282a36;
+    box-shadow: 0 0 15px #00e5ff, 0 0 30px rgba(0, 229, 255, 0.6);
+    text-shadow: none;
 }

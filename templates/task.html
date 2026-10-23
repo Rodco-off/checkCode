@@ -12,7 +12,7 @@
     <!--для автозаполнения-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
-    <!--Для созданя нормальной табуляции-->
+    <!--Для создания нормальной табуляции-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
 
@@ -20,11 +20,28 @@
 </head>
 
 <body>
+    <a href="/" class="back-btn">← Назад к задачам</a>
     <div class="task-layout">
         <div class="task-info">
             <h1>{{.Task.Title}}</h1>
             <p>{{.Task.Description}}</p>
             <p>Сложность: <span class="difficulty-text {{.Task.Difficulty}}">{{.Task.Difficulty}}</span></p>
+            <div class="task-examples">
+                <h3>Примеры:</h3>
+                {{range $index, $example := .Examples}}
+                <div class="example-box">
+                    <p><strong>Пример:</strong></p>
+                    <p>Входные данные: <code>{{$example.Input}}</code></p>
+                    <p>Выходные данные: <code>{{$example.Output}}</code></p>
+                </div>
+                {{end}}
+            </div>
+            {{if .Task.Constraints}}
+            <div class="task-constraints">
+                <h3>Ограничения:</h3>
+                <pre>{{.Task.Constraints}}</pre>
+            </div>
+            {{end}}
         </div>
         <div class="task-editor">
             <form id="submit-form" class="editor-form">
@@ -41,7 +58,6 @@
             <div id="result" class="result-box"></div>
         </div>
     </div>
-
     <script>
         var goKeywords = [
                 "break", "case", "chan", "const", "continue", "default", "defer",

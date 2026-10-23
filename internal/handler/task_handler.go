@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -50,7 +51,7 @@ func (handl *TaskHandler) TasksPage(cont echo.Context) error {
 		return cont.String(http.StatusInternalServerError, "error")
 	}
 
-	return cont.Render(http.StatusOK, "tasks.html", map[string]interface{}{
+	return cont.Render(http.StatusOK, "tasks.html", map[string]any{
 		"Tasks": tasks,
 	})
 }
@@ -68,8 +69,17 @@ func (handl *TaskHandler) TaskPage(cont echo.Context) error {
 	if err != nil {
 		return cont.String(http.StatusBadRequest, "Ошибка")
 	}
+	examples, err := task.ParseTestCases()
+	if err != nil {
+		log.Printf("Ошибка парсинга тестов: %v", err)
+	}
 
-	return cont.Render(http.StatusOK, "task.html", map[string]interface{}{
-		"Task": task,
+	if len(examples) > 2 {
+		examples = examples[:2]
+	}
+
+	return cont.Render(http.StatusOK, "task.html", map[string]any{
+		"Task":     task,
+		"Examples": examples,
 	})
 }
