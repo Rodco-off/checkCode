@@ -17,10 +17,18 @@ func NewTaskRepository(db *gorm.DB) *TaskRepository {
 	return &TaskRepository{db: db}
 }
 
-func (repo *TaskRepository) GetAll() ([]domain.Task, error) {
+func (repo *TaskRepository) GetAll(difficulty string) ([]domain.Task, error) {
 	var tasks []domain.Task
+	var err error
 
-	err := repo.db.Find(&tasks).Error
+	if difficulty == "" {
+		err = repo.db.Find(&tasks).Error
+	} else {
+		query := repo.db.Model(&domain.Task{})
+		query = query.Where("difficulty = ?", difficulty)
+		err = query.Find(&tasks).Error
+	}
+
 	return tasks, err
 }
 

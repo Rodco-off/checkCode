@@ -8,6 +8,12 @@
 </head>
 <body>
     <h1>Задачи</h1>
+    <div class="filters">
+        <a href="/" class="filter-btn {{if eq .CurrentFilter ""}}active{{end}}">Все</a>
+        <a href="/?difficulty=easy" class="filter-btn {{if eq .CurrentFilter " easy"}}active{{end}}">Easy</a>
+        <a href="/?difficulty=medium" class="filter-btn {{if eq .CurrentFilter "medium"}}active{{end}}">Medium</a>
+        <a href="/?difficulty=hard" class="filter-btn {{if eq .CurrentFilter " hard"}}active{{end}}">Hard</a>
+    </div>
     <ul class="list-task">
     {{range .Tasks}}
         <li>

@@ -19,7 +19,8 @@ func NewTaskHandler(repo *repository.TaskRepository) *TaskHandler {
 }
 
 func (handl *TaskHandler) GetAll(cont echo.Context) error {
-	tasks, err := handl.repo.GetAll()
+	query := cont.QueryParam("difficulty")
+	tasks, err := handl.repo.GetAll(query)
 	if err != nil {
 		return cont.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
@@ -46,13 +47,15 @@ func (handl *TaskHandler) GetByID(cont echo.Context) error {
 }
 
 func (handl *TaskHandler) TasksPage(cont echo.Context) error {
-	tasks, err := handl.repo.GetAll()
+	filter := cont.QueryParam("difficulty")
+	tasks, err := handl.repo.GetAll(filter)
 	if err != nil {
 		return cont.String(http.StatusInternalServerError, "error")
 	}
 
 	return cont.Render(http.StatusOK, "tasks.html", map[string]any{
-		"Tasks": tasks,
+		"Tasks":         tasks,
+		"CurrentFilter": filter,
 	})
 }
 
