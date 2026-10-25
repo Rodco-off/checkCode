@@ -6,15 +6,21 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Rodco-off/checkCode/internal/domain"
 	"github.com/Rodco-off/checkCode/internal/repository"
 	"github.com/labstack/echo"
 )
 
-type TaskHandler struct {
-	repo *repository.TaskRepository
+type TaskRepoInterface interface {
+	GetAll(difficulty string) ([]domain.Task, error)
+	GetByID(id uint) (*domain.Task, error)
 }
 
-func NewTaskHandler(repo *repository.TaskRepository) *TaskHandler {
+type TaskHandler struct {
+	repo TaskRepoInterface
+}
+
+func NewTaskHandler(repo TaskRepoInterface) *TaskHandler {
 	return &TaskHandler{repo: repo}
 }
 
@@ -36,11 +42,11 @@ func (handl *TaskHandler) GetByID(cont echo.Context) error {
 
 	task, err := handl.repo.GetByID(uint(id))
 	if errors.Is(err, repository.ErrTaskNotFound) {
-		cont.JSON(http.StatusNotFound, map[string]string{"error": "Не найдена задача с таким ID"})
+		return cont.JSON(http.StatusNotFound, map[string]string{"error": "Не найдена задача с таким ID"})
 	}
 
 	if err != nil {
-		cont.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return cont.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
 	return cont.JSON(http.StatusOK, task)

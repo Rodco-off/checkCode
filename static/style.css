@@ -305,11 +305,3 @@ button {
     box-shadow: 0 0 15px #00e5ff, 0 0 30px rgba(0, 229, 255, 0.6);
     text-shadow: none;
 }
-
-.filter-btn.active {
-    background: rgba(0, 229, 255, 0.15);
-    color: #ffffff;
-    border-color: #00e5ff;
-    box-shadow: inset 0 0 5px rgba(0, 229, 255, 0.3);
-    text-shadow: none;
-}

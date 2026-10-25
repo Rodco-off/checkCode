@@ -3,7 +3,7 @@ package domain
 import "encoding/json"
 
 type Task struct {
-	TaskID      int    `gorm:"primaryKey"`
+	TaskID      uint   `gorm:"primaryKey"`
 	Title       string `gorm:"not null"`
 	Description string `gorm:"not null"`
 	Difficulty  string `gorm:"default:easy"`
