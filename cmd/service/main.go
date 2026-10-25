@@ -36,7 +36,7 @@ func main() {
 
 	runner, err := sandbox.NewRunner(context.Background())
 	if err != nil {
-		log.Fatalf("Sandbox: %v", err)
+		log.Fatalf("Песочница: %v", err)
 	}
 
 	checker := service.NewChecker(taskRepo, submitRepo, runner)

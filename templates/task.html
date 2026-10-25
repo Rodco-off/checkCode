@@ -3,30 +3,105 @@
 
 <head>
     <title>{{.Task.Title}}</title>
+    <!--основа codemirror-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/go/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/anyword-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <!--для автозаполнения-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+    <!--Для создания нормальной табуляции-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
-    <h1>{{.Task.Title}}</h1>
-    <p>{{.Task.Description}}</p>
-    <p>Сложность: {{.Task.Difficulty}}</p>
+    <a href="/" class="back-btn">← Назад к задачам</a>
+    <div class="task-layout">
+        <div class="task-info">
+            <h1>{{.Task.Title}}</h1>
+            <p>{{.Task.Description}}</p>
+            <p>Сложность: <span class="difficulty-text {{.Task.Difficulty}}">{{.Task.Difficulty}}</span></p>
+            <div class="task-examples">
+                <h3>Примеры:</h3>
+                {{range $index, $example := .Examples}}
+                <div class="example-box">
+                    <p><strong>Пример:</strong></p>
+                    <p>Входные данные: <code>{{$example.Input}}</code></p>
+                    <p>Выходные данные: <code>{{$example.Output}}</code></p>
+                </div>
+                {{end}}
+            </div>
+            {{if .Task.Constraints}}
+            <div class="task-constraints">
+                <h3>Ограничения:</h3>
+                <pre>{{.Task.Constraints}}</pre>
+            </div>
+            {{end}}
+        </div>
+        <div class="task-editor">
+            <form id="submit-form" class="editor-form">
+                <input type="hidden" id="task-id" value="{{.Task.TaskID}}">
 
-    <form id="submit-form">
-        <input type="hidden" id="task-id" value="{{.Task.TaskID}}">
-        <textarea id="code" rows="15" cols="80" placeholder="func Solve(input string) string {
-    // твой код
-}"></textarea>
-        <br>
-        <button type="submit">Отправить</button>
-    </form>
+                <div class="editor-container">
+                    <textarea id="code"></textarea>
+                </div>
 
-    <div id="result"></div>
-
+                <div class="button-container">
+                    <button type="submit" class="submit-btn">Отправить</button>
+                </div>
+            </form>
+            <div id="result" class="result-box"></div>
+        </div>
+    </div>
     <script>
+        var goKeywords = [
+                "break", "case", "chan", "const", "continue", "default", "defer",
+                "else", "fallthrough", "for", "func", "go", "goto", "if", "import",
+                "interface", "map", "package", "range", "return", "select", "struct",
+                "switch", "type", "var",
+                "bool", "byte", "complex64", "complex128", "error", "float32", "float64",
+                "int", "int8", "int16", "int32", "int64", "rune", "string",
+                "uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
+                "true", "false", "iota", "nil", "append", "cap", "close", "complex",
+                "copy", "delete", "imag", "len", "make", "new", "panic", "print",
+                "println", "real", "recover"
+            ];
+        function goHint(cm) {
+                var cur = cm.getCursor();
+                var token = cm.getTokenAt(cur);
+                var word = token.string;
+
+                return CodeMirror.hint.fromList(cm, { words: goKeywords });
+            }
+        CodeMirror.registerHelper("hint", "go", goHint);
+        var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+                mode: "go",
+                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                theme: "dracula",
+                extraKeys: { "Ctrl-Space": "autocomplete" },
+                autoCloseBrackets: true,
+                matchBrackets: true,
+            });
+        editor.setSize("95%", "650px")
+        editor.on("change", function (cm, change) {
+                if (change.text[0] === ".") {
+                    cm.showHint({ hint: CodeMirror.hint.go });
+                }
+            });
+        CodeMirror.commands.autocomplete = function (cm) {
+                cm.showHint({ hint: CodeMirror.hint.go });
+            };
         document.getElementById('submit-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const taskId = parseInt(document.getElementById('task-id').value);
-            const code = document.getElementById('code').value;
+            const code = editor.getValue();
 
             const resp = await fetch('/api/submit', {
                 method: 'POST',
@@ -34,9 +109,35 @@
                 body: JSON.stringify({ task_id: taskId, code: code })
             });
             const data = await resp.json();
-            document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            const resultDiv = document.getElementById('result');
+
+            resultDiv.className = 'result-box';
+            resultDiv.innerHTML = '';
+
+            if (data.status === 'success') {
+                resultDiv.classList.add('success');
+                resultDiv.innerHTML = '<h3>✅ Верно!</h3>';
+
+            } else if (data.status === 'failed') {
+                resultDiv.classList.add('failed');
+                resultDiv.innerHTML = `
+                <h3>❌ Неверно</h3>
+                <p>Ожидалось: <b>${data.expected || 'пусто'}</b></p>
+                <p>Получено: <b>${data.output || 'пусто'}</b></p>
+            `;
+
+            } else if (data.status === 'error') {
+                resultDiv.classList.add('error');
+                resultDiv.innerHTML = `
+                <h3>⚠️ Ошибка компиляции/выполнения</h3>
+                <pre style="white-space: pre-wrap; margin: 0;">${data.error_message}</pre>
+            `;
+            }
         });
     </script>
+    <footer>
+        <p>Сайт сделан <strong>Rodco</strong> © 2026. Все права защищены.</p>
+    </footer>
 </body>
 
 </html>

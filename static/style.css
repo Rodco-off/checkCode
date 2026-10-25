@@ -1,3 +1,307 @@
 h1 {
+    margin-bottom: 16px;
+}
+
+body {
+    background-color: #3b3e52;
+    color: #f8f8f2;
+}
+
+.task-layout {
+    display: flex;
+    gap: 250px;
+    padding: 30px 40px;
+    align-items: flex-start;
+}
+
+footer {
+    margin-top: 150px;
+    padding: 20px 20px;
+    border-top: 1px solid #000;
     text-align: center;
+    color: #FFF;
+    font-size: 14px;
+}
+
+footer strong {
+    color: #f8f8f2;
+}
+
+.task-info {
+    flex: 1;
+    padding: 20px;
+}
+
+.task-info h1 {
+    font-size: 28px;
+    margin: 0 0 16px 0;
+}
+
+.task-info p {
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.difficulty-text {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.difficulty-text.easy {
+    color: #50fa7b;
+    background-color: rgba(80, 250, 123, 0.1);
+    border: 1px solid rgba(80, 250, 123, 0.5);
+    text-shadow: 0 0 8px rgba(80, 250, 123, 0.6);
+    box-shadow: inset 0 0 5px rgba(80, 250, 123, 0.2);
+}
+
+.difficulty-text.medium {
+    color: #f1fa8c;
+    background-color: rgba(241, 250, 140, 0.1);
+    border: 1px solid rgba(241, 250, 140, 0.5);
+    text-shadow: 0 0 8px rgba(241, 250, 140, 0.6);
+    box-shadow: inset 0 0 5px rgba(241, 250, 140, 0.2);
+}
+
+.difficulty-text.hard {
+    color: #ff5555;
+    background-color: rgba(255, 85, 85, 0.1);
+    border: 1px solid rgba(255, 85, 85, 0.5);
+    text-shadow: 0 0 8px rgba(255, 85, 85, 0.6);
+    box-shadow: inset 0 0 5px rgba(255, 85, 85, 0.2);
+}
+
+.difficulty-text:hover {
+    filter: brightness(1.3);
+}
+
+.task-editor {
+    flex: 2;
+}
+
+.editor-form {
+    display: flex;
+    gap: 0px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.editor-container {
+    flex: 1;
+}
+
+.button-container {
+    flex-shrink: 0;
+    width: auto;
+}
+
+button {
+    color: #FFF;
+    background: #444;
+}
+
+.result-box {
+    display: none;
+    margin-top: 20px;
+    max-width: 925px;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 16px;
+    background: black;
+    transition: all 0.3s ease;
+}
+
+.result-box.success,
+.result-box.failed,
+.result-box.error {
+    display: block;
+}
+
+.result-box h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.result-box.success {
+    background-color: rgba(80, 250, 123, 0.15);
+    border: 2px solid #50fa7b;
+    color: #50fa7b;
+    box-shadow: 0 0 10px rgba(80, 250, 123, 0.3), inset 0 0 10px rgba(80, 250, 123, 0.3);
+    text-shadow: 0 0 5px rgba(80, 250, 123, 0.5);
+}
+
+.result-box.failed {
+    background-color: rgba(255, 85, 85, 0.15);
+    border: 2px solid #ff5555;
+    color: #ff5555;
+    box-shadow: 0 0 10px rgba(255, 85, 85, 0.3), inset 0 0 10px rgba(255, 85, 85, 0.3);
+    text-shadow: 0 0 5px rgba(255, 85, 85, 0.5);
+}
+
+.result-box.error {
+    background-color: rgba(241, 250, 140, 0.15);
+    border: 2px solid #f1fa8c;
+    color: #f1fa8c;
+    box-shadow: 0 0 10px rgba(241, 250, 140, 0.3), inset 0 0 10px rgba(241, 250, 140, 0.3);
+    text-shadow: 0 0 5px rgba(241, 250, 140, 0.5);
+}
+
+.result-box b,
+.result-box pre {
+    color: #ffffff;
+    text-shadow: none;
+}
+
+.result-box pre {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.submit-btn {
+    background: transparent;
+    border: 2px solid #00e5ff;
+    color: #00e5ff;
+    padding: 10px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+
+    box-shadow: 0 0 5px #00e5ff, inset 0 0 5px #00e5ff;
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #00e5ff;
+    color: #282a36;
+    box-shadow: 0 0 15px #00e5ff, 0 0 30px rgba(0, 229, 255, 0.6);
+    text-shadow: none;
+}
+
+.submit-btn:active {
+    transform: scale(0.95);
+}
+
+.name-task {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+.name-task:hover {
+    color: #00e5ff;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.8),
+        0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+.CodeMirror {
+    border: 1px solid #444 !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+}
+
+.task-info h3 {
+    color: #bd93f9;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.task-constraints pre {
+    display: inline-block;
+    max-width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 6px;
+    color: #ffb86c;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.example-box {
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid #6272a4;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 0 6px 6px 0;
+}
+
+.example-box p {
+    margin: 5px 0;
+    color: #f8f8f2;
+}
+
+.example-box code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #50fa7b;
+}
+
+.back-btn {
+    display: inline-block;
+    margin: 20px 0 0 40px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 2px solid #00e5ff;
+    color: #00e5ff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 5px #00e5ff, inset 0 0 5px #00e5ff;
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #00e5ff;
+    color: #282a36;
+    box-shadow: 0 0 15px #00e5ff, 0 0 30px rgba(0, 229, 255, 0.6);
+    text-shadow: none;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 2px solid #00e5ff;
+    border-radius: 6px;
+    color: #00e5ff;
+    background: transparent;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(0, 229, 255, 0.3), inset 0 0 5px rgba(0, 229, 255, 0.3);
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #00e5ff;
+    color: #282a36;
+    box-shadow: 0 0 15px #00e5ff, 0 0 30px rgba(0, 229, 255, 0.6);
+    text-shadow: none;
 }
